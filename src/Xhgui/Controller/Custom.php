@@ -60,32 +60,38 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         return $response->body(json_encode($r));
     }
 
-    public function countReq()
+    public function test()
     {
         $response = $this->_app->response();
         $response['Content-Type'] = 'application/json';
 
-        try
-        {
+        $totalApis = [];
+
+        try{
             // connect to mongodb
-            $collection = (new MongoClient())->xhgui->customViews;
-            // insert one for test
-            $document = ["count" => 1, "timestamp" => time()];
-            $collection->insert($document);
-
             // count last second
-            $lastSec = time() - 1;
-            $total = $collection->count(["timestamp" => ["\$gte" => $lastSec]]);
+            $dbName     = $this->_app->config('db.db');
+            $collection = (new MongoClient())->$dbName->customViews;
+            $lastMinute    = time() - 50000;
+            $countList  = $collection->find(["timestamp" => ["\$gte" => $lastMinute]]);
 
-            $r = [
-                "total_request" => $total
-            ];
+            foreach ($countList as $count){
+                $api   = isset($count["api"]) ? $count["api"] : "others";
+                $curr  = isset($totalApis[$api]) ? $totalApis[$api] : 0;
+                $total = $curr + 1;
 
-            return $response->body(json_encode($r));
+                $totalApis[$api] = $total;
+            }
+
+        }catch ( \Exception $e ){
+            /* Silence ignore */
+            var_dump($e); die;
         }
-        catch ( \MongoConnectionException $e )
-        {
-            echo "<p>Couldn\'t connect to mongodb, is the \"mongo\" process running?</p>";
-        }
+
+        $r = [
+            'totalApis' => $totalApis
+        ];
+
+        return $response->body(json_encode($r));
     }
 }

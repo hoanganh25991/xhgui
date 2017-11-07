@@ -10,7 +10,7 @@ if(!function_exists('countReq')){
         $collection = (new \MongoClient())->xhprof->customViews;
 
         $apiRaw = parse_url($_SERVER["REQUEST_URI"])["path"];
-        $api    = preg_replace('/[^A-Za-z0-9\-]/', '', $apiRaw);
+        $api    = preg_replace('/[^A-Za-z0-9\-\/]/', '', $apiRaw);
 
         $countObj = ["count" => 1, "timestamp" => time(), "api" => $api];
         $collection->insert($countObj);

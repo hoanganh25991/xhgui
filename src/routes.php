@@ -98,9 +98,9 @@ $app->post('/custom/query', function () use ($di) {
     $di['customController']->query();
 })->name('custom.query');
 
-$app->get('/custom/req', function () use ($di) {
-    $di['customController']->countReq();
-})->name('custom.req');
+$app->get('/custom/test', function () use ($di) {
+    $di['customController']->test();
+})->name('custom.test');
 
 
 // Waterfall routes
@@ -112,10 +112,3 @@ $app->get('/waterfall', function () use ($di, $app) {
 $app->get('/waterfall/data', function () use ($di) {
     $di['waterfallController']->query();
 })->name('waterfall.data');
-
-
-// Test
-$app->get('/run/test', function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->test();
-})->name('run.test');
