@@ -117,5 +117,5 @@ $app->get('/waterfall/data', function () use ($di) {
 // Test
 $app->get('/run/test', function () use ($di, $app) {
     $app->controller = $di['runController'];
-    $app->controller->countApiDetail();
-})->name('run.countApiDetail');
+    $app->controller->test();
+})->name('run.test');
