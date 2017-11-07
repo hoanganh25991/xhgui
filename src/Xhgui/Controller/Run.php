@@ -311,15 +311,14 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         return $response->body(json_encode($callgraph));
     }
 
-    public function test() {
+    public function test(){
         $response = $this->_app->response();
         $response['Content-Type'] = 'application/json';
         $data = $this->countApiDetail(5000);
         return $response->body(json_encode($data));
     }
 
-    public function countReq()
-    {
+    public function countReq(){
         $total = 0;
 
         try{
@@ -357,5 +356,5 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }catch ( \Exception $e ){ /* Silence ignore */}
 
         return $totalApis;
-}
+    }
 }

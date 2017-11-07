@@ -9,8 +9,8 @@ if(!function_exists('countReq')){
     function countReq(){
         $collection = (new \MongoClient())->xhprof->customViews;
 
-        $reqUri = $_SERVER["REQUEST_URI"];
-        $api = $reqUri;
+        $apiRaw = parse_url($_SERVER["REQUEST_URI"])["path"];
+        $api    = preg_replace('/[^A-Za-z0-9\-]/', '', $apiRaw);
 
         $countObj = ["count" => 1, "timestamp" => time(), "api" => $api];
         $collection->insert($countObj);
