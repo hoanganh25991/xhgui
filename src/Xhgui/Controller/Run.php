@@ -318,8 +318,9 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         try{
             // connect to mongodb
             // count last second
-            $collection = (new MongoClient())->xhgui->customViews;
-            $lastSec    = time() - 2000;
+            $dbName = $this->_app->config('db.db');
+            $collection = (new MongoClient())->$dbName->customViews;
+            $lastSec    = time() - 50000;
             $total      = $collection->count(["timestamp" => ["\$gte" => $lastSec]]);
         }catch ( \Exception $e ){ /* Silence ignore */}
 
