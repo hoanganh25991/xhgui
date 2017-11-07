@@ -56,7 +56,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'date_format' => $this->_app->config('date.format'),
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
-            'title' => $title
+            'title' => $title,
+            'reqPerSec' => 959
         ));
     }
 

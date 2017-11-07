@@ -62,13 +62,43 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
     public function countReq()
     {
-        $request = $this->_app->request();
         $response = $this->_app->response();
         $response['Content-Type'] = 'application/json';
 
+        try
+        {
+            // connect to mongodb
+            $m = new MongoClient();
+            echo "Connection to database successfully";
+
+            // select a database
+            $db = $m->xhgui;
+            echo "Database mydb selected";
+            $collection = $db->customViews;
+            echo "Collection selected succsessfully";
+
+            $document = array(
+               "title" => "MongoDB",
+               "description" => "database",
+               "likes" => 100,
+               "url" => "http://www.tutorialspoint.com/mongodb/",
+               "by", "tutorials point"
+            );
+
+            $collection->insert($document);
+            echo "Document inserted successfully";
+
+            echo $collection->count();
+        }
+        catch ( \MongoConnectionException $e )
+        {
+            echo "<p>Couldn\'t connect to mongodb, is the \"mongo\" process running?</p>";
+        }
+
+
         $r = [
-            "total_request": 1000
-        ]
+            "total_request" => 1000
+        ];
 
         return $response->body(json_encode($r));
     }

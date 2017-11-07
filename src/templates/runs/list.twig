@@ -10,6 +10,7 @@
 
 {% if runs|length or has_search %}
 <div class="searchbar clearfix">
+    <div class="pull-left">Requests per second: {{ reqPerSec }}</div>
     <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
         <i class="icon-search"></i> Search
     </a>
