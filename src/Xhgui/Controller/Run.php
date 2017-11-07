@@ -57,7 +57,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
             'title' => $title,
-            'reqPerSec' => 959
+            'reqPerSec' => $this->countReq()
         ));
     }
 
@@ -309,5 +309,20 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $response['Content-Type'] = 'application/json';
         return $response->body(json_encode($callgraph));
+    }
+
+    public function countReq()
+    {
+        $total = 0;
+
+        try{
+            // connect to mongodb
+            // count last second
+            $collection = (new MongoClient())->xhgui->customViews;
+            $lastSec    = time() - 2000;
+            $total      = $collection->count(["timestamp" => ["\$gte" => $lastSec]]);
+        }catch ( \Exception $e ){ /* Silence ignore */}
+
+        return $total;
     }
 }
