@@ -311,6 +311,13 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         return $response->body(json_encode($callgraph));
     }
 
+    public function test() {
+        $response = $this->_app->response();
+        $response['Content-Type'] = 'application/json';
+        $data = $this->countApiDetail(5000);
+        return $response->body(json_encode($data));
+    }
+
     public function countReq()
     {
         $total = 0;
@@ -318,12 +325,37 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         try{
             // connect to mongodb
             // count last second
-            $dbName = $this->_app->config('db.db');
+            $dbName     = $this->_app->config('db.db');
             $collection = (new MongoClient())->$dbName->customViews;
-            $lastSec    = time() - 50000;
-            $total      = $collection->count(["timestamp" => ["\$gte" => $lastSec]]);
+            $lastMinute    = time() - 60;
+            $total      = $collection->count(["timestamp" => ["\$gte" => $lastMinute]]);
+
         }catch ( \Exception $e ){ /* Silence ignore */}
 
         return $total;
     }
+
+    public function countApiDetail($last = 60){
+        $totalApis = [];
+
+        try{
+            // connect to mongodb
+            // count last second
+            $dbName     = $this->_app->config('db.db');
+            $collection = (new MongoClient())->$dbName->customViews;
+            $lastMinute    = time() - $last;
+            $countList  = $collection->find(["timestamp" => ["\$gte" => $lastMinute]]);
+
+            foreach ($countList as &$count){
+                $api   = isset($count["api"]) ? $count["api"] : "others";
+                $curr  = isset($totalApis[$api]) ? $totalApis[$api] : 0;
+                $total = $curr + 1;
+
+                $totalApis[$api] = $total;
+            }
+
+        }catch ( \Exception $e ){ /* Silence ignore */}
+
+        return $totalApis;
+}
 }

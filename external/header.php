@@ -2,16 +2,22 @@
 /**
  * Define countReq if not exist
  */
+$dir = dirname(__DIR__);
+require_once $dir . "/vendor/autoload.php";
+
 if(!function_exists('countReq')){
     function countReq(){
-        require './../vendor/autoload.php';
         $collection = (new \MongoClient())->xhprof->customViews;
-        $countObj = ["count" => 1, "timestamp" => time()];
+
+        $reqUri = $_SERVER["REQUEST_URI"];
+        $api = $reqUri;
+
+        $countObj = ["count" => 1, "timestamp" => time(), "api" => $api];
         $collection->insert($countObj);
 
         // Clear old $count
-        $lastMinute = time() - 60;
-        $collection->remove(["timestamp" => ["\$lte" => $lastMinute]]);
+        $last3Minutes = time() - 60 * 3;
+        $collection->remove(["timestamp" => ["\$lte" => $last3Minutes]]);
     }
 }
 
