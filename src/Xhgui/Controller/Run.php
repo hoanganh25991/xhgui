@@ -57,7 +57,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
             'title' => $title,
-            'reqPerSec' => $this->countReq()
+            'reqPerSec' => $this->countReq(),
+            'countApiDetail' => $this->countApiDetail()
         ));
     }
 
@@ -345,7 +346,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $lastMinute    = time() - $last;
             $countList  = $collection->find(["timestamp" => ["\$gte" => $lastMinute]]);
 
-            foreach ($countList as &$count){
+            foreach ($countList as $count){
                 $api   = isset($count["api"]) ? $count["api"] : "others";
                 $curr  = isset($totalApis[$api]) ? $totalApis[$api] : 0;
                 $total = $curr + 1;

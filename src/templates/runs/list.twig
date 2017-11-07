@@ -10,7 +10,7 @@
 
 {% if runs|length or has_search %}
 <div class="searchbar clearfix">
-    <div class="pull-left">Requests per second: {{ reqPerSec }}</div>
+    <div class="pull-left">Requests per minute: {{ reqPerSec }}</div>
     <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
         <i class="icon-search"></i> Search
     </a>
@@ -34,6 +34,17 @@
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
     </form>
+</div>
+
+<div class="searchbar clearfix">
+    {% for api, total in countApiDetail %}
+        <div class="clearfix" style="max-width: 480px">
+            <div class="pull-left">{{ api }}:</div>
+            <div class="pull-right">{{ total }}</div>
+        </div>
+    {% else %}
+        No api found
+    {% endfor %}
 </div>
 {% endif %}
 
