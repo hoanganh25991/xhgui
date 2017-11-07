@@ -1,4 +1,22 @@
 <?php
+/**
+ * Define countReq if not exist
+ */
+if(!function_exists('countReq')){
+    function countReq(){
+        require './../vendor/autoload.php';
+        $collection = (new \MongoClient())->xhprof->customViews;
+        $countObj = ["count" => 1, "timestamp" => time()];
+        $collection->insert($countObj);
+
+        // Clear old $count
+        $lastMinute = time() - 60;
+        $collection->remove(["timestamp" => ["\$lte" => $lastMinute]]);
+    }
+}
+
+// Ok count it
+countReq();
 /* Things you may want to tweak in here:
  *  - xhprof_enable() uses a few constants.
  *  - The values passed to rand() determine the the odds of any particular run being profiled.
@@ -166,3 +184,4 @@ register_shutdown_function(
         }
     }
 );
+
