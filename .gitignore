@@ -1,5 +1,5 @@
 /composer.phar
 /tags
-/vendor
+#/vendor
 config/config.php
 .idea
