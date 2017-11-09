@@ -30,8 +30,8 @@ return array(
     // Profile 1 in 100 requests.
     // You can return true to profile every request.
     'profiler.enable' => function() {
-        $xhguiInServerName = strpos($_SERVER["SERVER_NAME"], "xhgui") === false;
-        $xhguiInRequestUri = strpos($_SERVER["REQUEST_URI"], "xhgui") === false;
+        $xhguiInServerName = strpos($_SERVER["SERVER_NAME"], "xhgui") !== false;
+        $xhguiInRequestUri = strpos($_SERVER["REQUEST_URI"], "xhgui") !== false;
         $fromXhgui = $xhguiInServerName || $xhguiInRequestUri;
         if($fromXhgui) return false;
 
